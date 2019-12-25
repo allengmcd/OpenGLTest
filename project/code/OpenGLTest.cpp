@@ -71,6 +71,7 @@ WinMain(HINSTANCE hInstance,
         int nCmdShow)
 {
 
+
     WNDCLASSA WindowClass = {};
     
     WindowClass.style = CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
