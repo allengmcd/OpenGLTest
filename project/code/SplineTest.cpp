@@ -38,10 +38,13 @@ redraw(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    float curve[4][3] = {{-0.4f,0.8f,0.0f},{0.2f,-0.5f,0.0f},{0.4f,0.8f,0.0f},{0.6f,0.2f,0.0f}};
+    float curve[4][3] = {{-0.4f,0.0f,0.0f},{0.0f,0.6f,0.0f},{0.4f,0.0f,0.0f},{0.9f,-0.8f,0.0f}};
+    float tangents[4][3] = {{1.0f,1.0f,0.0f},{0.0f,-1.0f,0.0f},{1.0f,0.1f,0.0f},{0.0f,1.0f,0.0f}};
     //float** curve = new float*[3];
     
-    BezierCurve(curve, 4, 100);
+    //BezierCurve(curve, 8, 100);
+    HermiteCurve(curve, tangents, 4, 100);
+
     
     SwapBuffers(hDC);
 }
