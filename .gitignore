@@ -5,3 +5,4 @@
 *.pdb
 *.exe
 project/code/build/*
+*.rdbg
