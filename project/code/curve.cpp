@@ -109,3 +109,40 @@ int HermiteCurve(float vertex[][3], float tangent[][3], int length, int steps)
   
     return 0;
 }
+
+
+
+int CatmullRomCurve(float vertex[][3], float tangent[][3], int length, int steps)
+{
+    if(length < 3)
+    {
+        return -1;
+    }
+
+    glBegin(GL_LINES);
+    for(int k = 0; k < length-1; k++)
+    {
+        float xPrev= vertex[k][0], yPrev = vertex[k][1], zPrev = vertex[k][2];
+        for (unsigned i = 0; i <= steps; i++)
+        {
+            float t = (float)i / (float)steps;
+
+            float valX = 0, valY = 0, valZ = 0;
+            
+            valX = HermiteFunction(vertex[k][0], vertex[k+1][0], tangent[k][0], tangent[k+1][0], t);
+            valY = HermiteFunction(vertex[k][1], vertex[k+1][1], tangent[k][1], tangent[k+1][1], t);
+            valZ = HermiteFunction(vertex[k][2], vertex[k+1][2], tangent[k][2], tangent[k+1][2], t);
+
+            
+            glVertex3f(xPrev, yPrev, zPrev);
+            glVertex3f(valX, valY, valZ);
+            xPrev = valX;
+            yPrev = valY;
+            zPrev = valZ;
+        }
+    }
+
+    glEnd();
+  
+    return 0;
+}
