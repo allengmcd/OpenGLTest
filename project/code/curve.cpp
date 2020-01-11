@@ -111,8 +111,7 @@ int HermiteCurve(float vertex[][3], float tangent[][3], int length, int steps)
 }
 
 
-
-int CatmullRomCurve(float vertex[][3], float tangent[][3], int length, int steps)
+int CatmullRomCurve(float vertex[][3], int length, int steps)
 {
     if(length < 3)
     {
@@ -120,18 +119,39 @@ int CatmullRomCurve(float vertex[][3], float tangent[][3], int length, int steps
     }
 
     glBegin(GL_LINES);
-    for(int k = 0; k < length-1; k++)
+    for(int k = 1; k < length-2; k++)
     {
         float xPrev= vertex[k][0], yPrev = vertex[k][1], zPrev = vertex[k][2];
+
+        float x1 = vertex[k-1][0], x2 = vertex[k][0], x3 = vertex[k+1][0], x4 = vertex[k+2][0];
+        float y1 = vertex[k-1][1], y2 = vertex[k][1], y3 = vertex[k+1][1], y4 = vertex[k+2][1];
+        float z1 = vertex[k-1][2], z2 = vertex[k][2], z3 = vertex[k+1][2], z4 = vertex[k+2][2];
+
+        float xA = x2;
+        float xB = -0.5f * x1 + 0.5f * x2;
+        float xC = x1 - 2.5f * x2 + 2 * x3 - 0.5f * x4;
+        float xD = -0.5 * x1 + 1.5f * x2 - 1.5 * x3 + 0.5f * x4;
+
+        float yA = y2;
+        float yB = -0.5f * y1 + 0.5f * y2;
+        float yC = y1 - 2.5f * y2 + 2 * y3 - 0.5f * y4;
+        float yD = -0.5 * y1 + 1.5f * y2 - 1.5 * y3 + 0.5f * y4;
+
+        float zA = z2;
+        float zB = -0.5f * z1 + 0.5f * z2;
+        float zC = z1 - 2.5f * z2 + 2 * z3 - 0.5f * z4;
+        float zD = -0.5 * z1 + 1.5f * z2 - 1.5 * z3 + 0.5f * z4;
+
+
         for (unsigned i = 0; i <= steps; i++)
         {
             float t = (float)i / (float)steps;
 
             float valX = 0, valY = 0, valZ = 0;
             
-            valX = HermiteFunction(vertex[k][0], vertex[k+1][0], tangent[k][0], tangent[k+1][0], t);
-            valY = HermiteFunction(vertex[k][1], vertex[k+1][1], tangent[k][1], tangent[k+1][1], t);
-            valZ = HermiteFunction(vertex[k][2], vertex[k+1][2], tangent[k][2], tangent[k+1][2], t);
+            valX = xA + xB * t + xC * POW(t, 2) + xD * POW(t, 3);
+            valY = yA + yB * t + yC * POW(t, 2) + yD * POW(t, 3);
+            valZ = zA + zB * t + zC * POW(t, 2) + zD * POW(t, 3);
 
             
             glVertex3f(xPrev, yPrev, zPrev);

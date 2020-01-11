@@ -1,6 +1,6 @@
 @echo off
 
-pushd ../../build
+pushd ../build
 SplineTest.exe
 
 popd
