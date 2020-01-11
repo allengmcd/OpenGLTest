@@ -113,7 +113,7 @@ int HermiteCurve(float vertex[][3], float tangent[][3], int length, int steps)
 
 int CatmullRomCurve(float vertex[][3], int length, int steps)
 {
-    if(length < 3)
+    if(length =< 3)
     {
         return -1;
     }
@@ -128,17 +128,17 @@ int CatmullRomCurve(float vertex[][3], int length, int steps)
         float z1 = vertex[k-1][2], z2 = vertex[k][2], z3 = vertex[k+1][2], z4 = vertex[k+2][2];
 
         float xA = x2;
-        float xB = -0.5f * x1 + 0.5f * x2;
+        float xB = -0.5f * x1 + 0.5f * x3;
         float xC = x1 - 2.5f * x2 + 2 * x3 - 0.5f * x4;
         float xD = -0.5 * x1 + 1.5f * x2 - 1.5 * x3 + 0.5f * x4;
 
         float yA = y2;
-        float yB = -0.5f * y1 + 0.5f * y2;
+        float yB = -0.5f * y1 + 0.5f * y3;
         float yC = y1 - 2.5f * y2 + 2 * y3 - 0.5f * y4;
         float yD = -0.5 * y1 + 1.5f * y2 - 1.5 * y3 + 0.5f * y4;
 
         float zA = z2;
-        float zB = -0.5f * z1 + 0.5f * z2;
+        float zB = -0.5f * z1 + 0.5f * z3;
         float zC = z1 - 2.5f * z2 + 2 * z3 - 0.5f * z4;
         float zD = -0.5 * z1 + 1.5f * z2 - 1.5 * z3 + 0.5f * z4;
 
