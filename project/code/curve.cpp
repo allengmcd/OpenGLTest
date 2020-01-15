@@ -127,10 +127,10 @@ int CatmullRomCurve(float vertex[][3], int length, int steps)
         return -1;
     }
 
-    for(int i = 0; i < length; i++)
-    {
-        DrawPoint(vertex[i]);
-    }
+    //for(int i = 0; i < length; i++)
+    //{
+    //    DrawPoint(vertex[i]);
+    //}
 
 
     glBegin(GL_LINES);
@@ -138,10 +138,10 @@ int CatmullRomCurve(float vertex[][3], int length, int steps)
     {
         float xPrev= vertex[k][0], yPrev = vertex[k][1], zPrev = vertex[k][2];
 
-        float tanX = 0.5f * (vertex[k+1][0] - vertex[k-1][0]), tanY = 0.5f * (vertex[k+1][1] - vertex[k-1][1]), tanZ = 0.5f * (vertex[k+1][2] - vertex[k-1][2]);
-        float slope = tanY/tanX;
-        glVertex3f( xPrev - 0.1f, yPrev + ( -0.1f)*slope, zPrev);  
-        glVertex3f( xPrev + 0.1f, yPrev + ( 0.1f)*slope, zPrev); 
+        //float tanX = 0.5f * (vertex[k+1][0] - vertex[k-1][0]), tanY = 0.5f * (vertex[k+1][1] - vertex[k-1][1]), tanZ = 0.5f * (vertex[k+1][2] - vertex[k-1][2]);
+        //float slope = tanY/tanX;
+        //glVertex3f( xPrev - 0.1f, yPrev + ( -0.1f)*slope, zPrev);  
+        //glVertex3f( xPrev + 0.1f, yPrev + ( 0.1f)*slope, zPrev); 
 
 
         float x1 = vertex[k-1][0], x2 = vertex[k][0], x3 = vertex[k+1][0], x4 = vertex[k+2][0];
