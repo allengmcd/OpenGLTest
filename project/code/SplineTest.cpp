@@ -11,21 +11,25 @@ HDC hDC;
 HGLRC hGLRC;
 HPALETTE hPalette;
 
+static bool Global_IsRunning;
+
+GLfloat Global_RotationAngle;
+
 void
 init(void)
 {
     /* set viewing projection */
     glMatrixMode(GL_PROJECTION);
     glFrustum(-0.5F, 0.5F, -0.5F, 0.5F, 1.0F, 3.0F);
-
+    
     /* position viewer */
     glMatrixMode(GL_MODELVIEW);
     glTranslatef(0.0F, 0.0F, -2.0F);
-
+    
     /* position object */
     glRotatef(30.0F, 1.0F, 0.0F, 0.0F);
     glRotatef(30.0F, 0.0F, 1.0F, 0.0F);
-
+    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -36,16 +40,22 @@ redraw(void)
 {
     /* clear color and depth buffers */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
+    
+    
     float curve[8][3] = {{-0.4f,0.0f,0.0f},{-0.2f,-0.4f,0.0f},{0.0f,0.4f,0.0f},{0.2f,0.6f,0.0f},{0.4f,0.0f,0.0f},{0.6f,0.4f,0.0f},{0.8f,0.2f,0.0f},{1.0f,0.2f,0.0f}};
     //float tangents[4][3] = {{1.0f,1.0f,0.0f},{0.0f,-1.0f,0.0f},{1.0f,0.1f,0.0f},{0.0f,1.0f,0.0f}};
     //float** curve = new float*[3];
     
+    glTranslatef(0.0F, 0.0F, 0.0F);
+    glRotatef(Global_RotationAngle, 1.0F, 0.0F, 0.0F);
+    Global_RotationAngle=0;
+    
     //BezierCurve(curve, 8, 100);
     //HermiteCurve(curve, tangents, 4, 100);
     CatmullRomCurve(curve, 7, 100);
-
+    
+    
+    
     
     SwapBuffers(hDC);
 }
@@ -64,8 +74,8 @@ setupPixelFormat(HDC hDC)
         sizeof(PIXELFORMATDESCRIPTOR),  /* size */
         1,                              /* version */
         PFD_SUPPORT_OPENGL |
-        PFD_DRAW_TO_WINDOW |
-        PFD_DOUBLEBUFFER,               /* support double-buffering */
+            PFD_DRAW_TO_WINDOW |
+            PFD_DOUBLEBUFFER,               /* support double-buffering */
         PFD_TYPE_RGBA,                  /* color type */
         16,                             /* prefered color depth */
         0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
@@ -81,17 +91,17 @@ setupPixelFormat(HDC hDC)
         0, 0, 0,                        /* no layer, visible, damage masks */
     };
     int pixelFormat;
-
+    
     pixelFormat = ChoosePixelFormat(hDC, &pfd);
     if (pixelFormat == 0) {
         MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
-                MB_ICONERROR | MB_OK);
+                   MB_ICONERROR | MB_OK);
         exit(1);
     }
-
+    
     if (SetPixelFormat(hDC, pixelFormat, &pfd) != TRUE) {
         MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
-                MB_ICONERROR | MB_OK);
+                   MB_ICONERROR | MB_OK);
         exit(1);
     }
 }
@@ -103,41 +113,41 @@ setupPalette(HDC hDC)
     PIXELFORMATDESCRIPTOR pfd;
     LOGPALETTE* pPal;
     int paletteSize;
-
+    
     DescribePixelFormat(hDC, pixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
-
+    
     if (pfd.dwFlags & PFD_NEED_PALETTE) {
         paletteSize = 1 << pfd.cColorBits;
     } else {
         return;
     }
-
+    
     pPal = (LOGPALETTE*)
         malloc(sizeof(LOGPALETTE) + paletteSize * sizeof(PALETTEENTRY));
     pPal->palVersion = 0x300;
     pPal->palNumEntries = paletteSize;
-
+    
     /* build a simple RGB color palette */
     {
         int redMask = (1 << pfd.cRedBits) - 1;
         int greenMask = (1 << pfd.cGreenBits) - 1;
         int blueMask = (1 << pfd.cBlueBits) - 1;
         int i;
-
+        
         for (i=0; i<paletteSize; ++i) {
             pPal->palPalEntry[i].peRed =
-                    (((i >> pfd.cRedShift) & redMask) * 255) / redMask;
+                (((i >> pfd.cRedShift) & redMask) * 255) / redMask;
             pPal->palPalEntry[i].peGreen =
-                    (((i >> pfd.cGreenShift) & greenMask) * 255) / greenMask;
+                (((i >> pfd.cGreenShift) & greenMask) * 255) / greenMask;
             pPal->palPalEntry[i].peBlue =
-                    (((i >> pfd.cBlueShift) & blueMask) * 255) / blueMask;
+                (((i >> pfd.cBlueShift) & blueMask) * 255) / blueMask;
             pPal->palPalEntry[i].peFlags = 0;
         }
     }
-
+    
     hPalette = CreatePalette(pPal);
     free(pPal);
-
+    
     if (hPalette) {
         SelectPalette(hDC, hPalette, FALSE);
         RealizePalette(hDC);
@@ -146,13 +156,13 @@ setupPalette(HDC hDC)
 
 LRESULT APIENTRY
 WndProc(
-    HWND hWnd,
-    UINT message,
-    WPARAM wParam,
-    LPARAM lParam)
+HWND hWnd,
+UINT message,
+WPARAM wParam,
+LPARAM lParam)
 {
     switch (message) {
-    case WM_CREATE:
+        case WM_CREATE:
         /* initialize OpenGL rendering */
         hDC = GetDC(hWnd);
         setupPixelFormat(hDC);
@@ -161,7 +171,7 @@ WndProc(
         wglMakeCurrent(hDC, hGLRC);
         init();
         return 0;
-    case WM_DESTROY:
+        case WM_DESTROY:
         /* finish OpenGL rendering */
         if (hGLRC) {
             wglMakeCurrent(NULL, NULL);
@@ -173,7 +183,7 @@ WndProc(
         ReleaseDC(hWnd, hDC);
         PostQuitMessage(0);
         return 0;
-    case WM_SIZE:
+        case WM_SIZE:
         /* track window size changes */
         if (hGLRC) {
             winWidth = (int) LOWORD(lParam);
@@ -181,7 +191,7 @@ WndProc(
             resize();
             return 0;
         }
-    case WM_PALETTECHANGED:
+        case WM_PALETTECHANGED:
         /* realize palette if this is *not* the current window */
         if (hGLRC && hPalette && (HWND) wParam != hWnd) {
             UnrealizeObject(hPalette);
@@ -191,7 +201,7 @@ WndProc(
             break;
         }
         break;
-    case WM_QUERYNEWPALETTE:
+        case WM_QUERYNEWPALETTE:
         /* realize palette if this is the current window */
         if (hGLRC && hPalette) {
             UnrealizeObject(hPalette);
@@ -201,7 +211,7 @@ WndProc(
             return TRUE;
         }
         break;
-    case WM_PAINT:
+        case WM_PAINT:
         {
             PAINTSTRUCT ps;
             BeginPaint(hWnd, &ps);
@@ -212,17 +222,55 @@ WndProc(
             return 0;
         }
         break;
-    case WM_CHAR:
+        case WM_CHAR:
         /* handle keyboard input */
         switch ((int)wParam) {
-        case VK_ESCAPE:
+            case VK_ESCAPE:
             DestroyWindow(hWnd);
             return 0;
-        default:
+            default:
             break;
         }
         break;
-    default:
+        case WM_KEYDOWN:
+        {
+            switch(wParam)
+            {
+                case 0x41://A key
+                Global_RotationAngle++;
+                
+                break;
+                case 0x42://B key
+                case 0x43://C key
+                case 0x44://D key
+                case 0x45://E key
+                case 0x46://F key
+                case 0x47://G key
+                case 0x48://H key
+                case 0x49://I key
+                case 0x4A://J key
+                case 0x4B://K key
+                case 0x4C://L key
+                case 0x4D://M key
+                case 0x4E://N key
+                case 0x4F://O key
+                case 0x50://P key
+                case 0x51://Q key
+                case 0x52://R key
+                case 0x53://S key
+                case 0x54://T key
+                case 0x55://U key
+                case 0x56://V key
+                case 0x57://W key
+                case 0x58://X key
+                case 0x59://Y key
+                case 0x5A://Z key
+                default:
+                break;
+            }
+        }
+        break;
+        default:
         break;
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
@@ -230,15 +278,15 @@ WndProc(
 
 int APIENTRY
 WinMain(
-    HINSTANCE hCurrentInst,
-    HINSTANCE hPreviousInst,
-    LPSTR lpszCmdLine,
-    int nCmdShow)
+HINSTANCE hCurrentInst,
+HINSTANCE hPreviousInst,
+LPSTR lpszCmdLine,
+int nCmdShow)
 {
     WNDCLASS wndClass;
     HWND hWnd;
     MSG msg;
-
+    
     /* register window class */
     wndClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
     wndClass.lpfnWndProc = WndProc;
@@ -251,22 +299,43 @@ WinMain(
     wndClass.lpszMenuName = NULL;
     wndClass.lpszClassName = className;
     RegisterClass(&wndClass);
-
+    
     /* create window */
     hWnd = CreateWindow(
         className, windowName,
         WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
         winX, winY, winWidth, winHeight,
         NULL, NULL, hCurrentInst, NULL);
-
+    
     /* display window */
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
-
-    /* process messages */
-    while (GetMessage(&msg, NULL, 0, 0) == TRUE) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+    
+    Global_IsRunning = true;
+    
+    while(Global_IsRunning)
+    {
+        
+        
+        
+        
+        MSG Message = {  };
+        while(PeekMessage(&Message, 0, 0, 0, PM_REMOVE))
+        {
+            if(Message.message == WM_QUIT)
+            {
+                Global_IsRunning= false;
+            }
+            
+            TranslateMessage(&Message);
+            DispatchMessageA(&Message);
+        }
+        
+        redraw();
+        
+        BitBlt(hDC , 0 , 0 , 1024,768 , hDC , 0 , 0 ,SRCCOPY);
+        
     }
-    return msg.wParam;
+    
+    return 0;
 }
