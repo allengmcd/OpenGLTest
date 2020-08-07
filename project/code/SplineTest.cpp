@@ -49,19 +49,23 @@ redraw(void)
     //float tangents[4][3] = {{1.0f,1.0f,0.0f},{0.0f,-1.0f,0.0f},{1.0f,0.1f,0.0f},{0.0f,1.0f,0.0f}};
     //float** curve = new float*[3];
     
+    
+    
+    glPushMatrix();
+    
     glTranslatef(0.0F, 0.0F, 0.0F);
     glRotatef(Global_RotationAngleY, 0.0F, 1.0F, 0.0F);
     glRotatef(Global_RotationAngleX, 1.0F, 0.0F, 0.0F);
     glRotatef(Global_RotationAngleZ, 0.0F, 0.0F, 1.0F);
-    Global_RotationAngleY=0;
-    Global_RotationAngleX=0;
-    Global_RotationAngleZ=0;
+    
     
     //BezierCurve(curve, 8, 100);
-    //HermiteCurve(curve, tangents, 4, 100);
+    //HermiteCurve(curve, tangents, 4, 100)
+    
     CatmullRomCurve(curve, 7, 100);
+    glPopMatrix();
     
-    
+    CatmullRomCurve(curve, 7, 100);
     
     
     SwapBuffers(hDC);
