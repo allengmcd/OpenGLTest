@@ -13,7 +13,10 @@ HPALETTE hPalette;
 
 static bool Global_IsRunning;
 
-GLfloat Global_RotationAngle;
+GLfloat 
+Global_RotationAngleY=0, 
+Global_RotationAngleX=0,
+Global_RotationAngleZ=0;
 
 void
 init(void)
@@ -47,8 +50,12 @@ redraw(void)
     //float** curve = new float*[3];
     
     glTranslatef(0.0F, 0.0F, 0.0F);
-    glRotatef(Global_RotationAngle, 1.0F, 0.0F, 0.0F);
-    Global_RotationAngle=0;
+    glRotatef(Global_RotationAngleY, 0.0F, 1.0F, 0.0F);
+    glRotatef(Global_RotationAngleX, 1.0F, 0.0F, 0.0F);
+    glRotatef(Global_RotationAngleZ, 0.0F, 0.0F, 1.0F);
+    Global_RotationAngleY=0;
+    Global_RotationAngleX=0;
+    Global_RotationAngleZ=0;
     
     //BezierCurve(curve, 8, 100);
     //HermiteCurve(curve, tangents, 4, 100);
@@ -237,13 +244,19 @@ LPARAM lParam)
             switch(wParam)
             {
                 case 0x41://A key
-                Global_RotationAngle++;
+                Global_RotationAngleY+=2;
                 
                 break;
                 case 0x42://B key
                 case 0x43://C key
                 case 0x44://D key
+                Global_RotationAngleY-=2;
+                
+                break;
                 case 0x45://E key
+                Global_RotationAngleZ-=2;
+                
+                break;
                 case 0x46://F key
                 case 0x47://G key
                 case 0x48://H key
@@ -256,12 +269,21 @@ LPARAM lParam)
                 case 0x4F://O key
                 case 0x50://P key
                 case 0x51://Q key
+                Global_RotationAngleZ+=2;
+                
+                break;
                 case 0x52://R key
                 case 0x53://S key
+                Global_RotationAngleX-=2;
+                
+                break;
                 case 0x54://T key
                 case 0x55://U key
                 case 0x56://V key
                 case 0x57://W key
+                Global_RotationAngleX+=2;
+                
+                break;
                 case 0x58://X key
                 case 0x59://Y key
                 case 0x5A://Z key
