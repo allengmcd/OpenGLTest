@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include "curve.cpp"
+#include "surfaces.cpp"
 
 char *className = "OpenGL";
 char *windowName = "OpenGL Cube";
@@ -62,10 +63,12 @@ redraw(void)
     //BezierCurve(curve, 8, 100);
     //HermiteCurve(curve, tangents, 4, 100)
     
-    CatmullRomCurve(curve, 7, 100);
+    //CatmullRomCurve(curve, 7, 100);
+    
+    DrawQuad();
     glPopMatrix();
     
-    CatmullRomCurve(curve, 7, 100);
+    //CatmullRomCurve(curve, 7, 100);
     
     
     SwapBuffers(hDC);

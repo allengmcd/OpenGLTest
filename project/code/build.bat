@@ -7,6 +7,6 @@ set CommonLinkerFlags= -STACK:0x100000,0x100000 -incremental:no -opt:ref user32.
 
 IF NOT EXIST ..\build mkdir ..\build
 pushd ..\build
-cl -FC -Zi ..\code\SplineTest.cpp  user32.lib Gdi32.lib opengl32.lib 
+cl -FC -Zi ..\code\OpenGLTest.cpp  user32.lib Gdi32.lib opengl32.lib 
 popd
 

@@ -95,24 +95,24 @@ float minSize = 0.1f;
 // Vertex Shader
 static const char* vShader = "									\n\
 #version 330													\n\
-																\n\
+                \n\
 layout (location = 0) in vec3 pos;								\n\
-																\n\
+                \n\
 uniform mat4 model;												\n\
-																\n\
+                \n\
 void main()														\n\
 {																\n\
-	gl_Position = model * vec4(pos, 1.0);	\n\
+ gl_Position = model * vec4(pos, 1.0);	\n\
 }";
 
 static const char* fShader = "			\n\
 #version 330							\n\
-										\n\
+          \n\
 out vec4 colour;						\n\
-										\n\
+          \n\
 void main()								\n\
 {										\n\
-	colour = vec4(1.0, 0.0, 0.0, 1.0);	\n\
+ colour = vec4(1.0, 0.0, 0.0, 1.0);	\n\
 }";
 
 
@@ -123,40 +123,40 @@ void CreateTriangle()
 		1.0f, -1.0f, 0.0f,
 		0.0f, 1.0f, 0.0f
 	};
-
+    
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
-
+    
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
-
+    
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+    
 	glBindVertexArray(0);
 }
 
 
 void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
-
+    
 	GLuint theShader = glCreateShader(shaderType);
-
+    
 	const GLchar* theCode[1];
 	theCode[0] = shaderCode;
-
+    
 	GLint codeLength[1];
 	codeLength[0] = strlen(shaderCode);
-
+    
 	glShaderSource(theShader, 1, theCode, codeLength);
 	glCompileShader(theShader);
-
+    
 	GLint result = 0;
 	GLchar eLog[1024] = { 0 };
-
+    
 	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
 	if (!result)
 	{
@@ -164,26 +164,26 @@ void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
 		return;
 	}
-
+    
 	glAttachShader(theProgram, theShader);
 }
 
 void CompileShaders()
 {
 	shader = glCreateProgram();
-
+    
 	if (!shader)
 	{
 		printf("Error creating shader program!\n");
 		return;
 	}
-
+    
 	AddShader(shader, vShader, GL_VERTEX_SHADER);
 	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
-
+    
 	GLint result = 0;
 	GLchar eLog[1024] = { 0 };
-
+    
 	glLinkProgram(shader);
 	glGetProgramiv(shader, GL_LINK_STATUS, &result);
 	if (!result)
@@ -192,7 +192,7 @@ void CompileShaders()
 		printf("Error linking program: '%s'\n", eLog);
 		return;
 	}
-
+    
 	glValidateProgram(shader);
 	glGetProgramiv(shader, GL_VALIDATE_STATUS, &result);
 	if (!result)
@@ -201,12 +201,12 @@ void CompileShaders()
 		printf("Error validating program: '%s'\n", eLog);
 		return;
 	}
-
+    
 	uniformModel = glGetUniformLocation(shader, "model");
 }
 
 ATOM registerClass(HINSTANCE hInstance) {
-
+    
 	WNDCLASSEX wcex;
 	ZeroMemory(&wcex, sizeof(wcex));
 	wcex.cbSize = sizeof(wcex);
@@ -215,13 +215,13 @@ ATOM registerClass(HINSTANCE hInstance) {
 	wcex.hInstance = hInstance;
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.lpszClassName = "Core";
-
+    
 	return RegisterClassEx(&wcex);
 }
 
 
 void showMessage(LPCSTR message) {
-
+    
 	MessageBox(0, message, "Window::create", MB_ICONERROR);
 }
 
@@ -257,22 +257,22 @@ WinMain(HINSTANCE hInstance,
 	HDC	DC;				// Device Context
 	HWND WND;			// Window
 	DWORD style;
-
+    
 	config.width = 1024;
 	config.height = 720;
 	config.posX = CW_USEDEFAULT;
 	config.posY = 0;
 	config.windowed = true;
 	style = WS_CAPTION | WS_SYSMENU | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
-
-windowClass = MAKEINTATOM(registerClass(hInstance));
+    
+    windowClass = MAKEINTATOM(registerClass(hInstance));
 	if (windowClass == 0) {
 		showMessage("registerClass() failed.");
 		return 1;
 	}
-
+    
 	// create temporary window
-
+    
 	HWND fakeWND = CreateWindow(
 		windowClass, "Fake Window",
 		style,
@@ -280,9 +280,9 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		1, 1,						// width, height
 		NULL, NULL,					// parent window, menu
 		hInstance, NULL);			// instance, param
-
+    
 	HDC fakeDC = GetDC(fakeWND);	// Device Context
-
+    
 	PIXELFORMATDESCRIPTOR fakePFD;
 	ZeroMemory(&fakePFD, sizeof(fakePFD));
 	fakePFD.nSize = sizeof(fakePFD);
@@ -292,53 +292,53 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 	fakePFD.cColorBits = 32;
 	fakePFD.cAlphaBits = 8;
 	fakePFD.cDepthBits = 24;
-
+    
 	const int fakePFDID = ChoosePixelFormat(fakeDC, &fakePFD);
 	if (fakePFDID == 0) {
 		showMessage("ChoosePixelFormat() failed.");
 		return 1;
 	}
-
+    
 	if (SetPixelFormat(fakeDC, fakePFDID, &fakePFD) == false) {
 		showMessage("SetPixelFormat() failed.");
 		return 1;
 	}
-
+    
 	HGLRC fakeRC = wglCreateContext(fakeDC);	// Rendering Contex
-
+    
 	if (fakeRC == 0) {
 		showMessage("wglCreateContext() failed.");
 		return 1;
 	}
-
+    
 	if (wglMakeCurrent(fakeDC, fakeRC) == false) {
 		showMessage("wglMakeCurrent() failed.");
 		return 1;
 	}
-
+    
 	// get pointers to functions (or init opengl loader here)
-
+    
 	PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
 	wglChoosePixelFormatARB = reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(wglGetProcAddress("wglChoosePixelFormatARB"));
 	if (wglChoosePixelFormatARB == nullptr) {
 		showMessage("wglGetProcAddress() failed.");
 		return 1;
 	}
-
+    
 	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
 	wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
 	if (wglCreateContextAttribsARB == nullptr) {
 		showMessage("wglGetProcAddress() failed.");
 		return 1;
 	}
-
+    
 	if (config.windowed == true) {
 		adjustSize(style);
 		center();
 	}
-
+    
 	// create a new window and context
-								
+    
 	WND = CreateWindow(
 		windowClass, "OpenGL Window",	// class name, window name
 		style,							// styles
@@ -346,9 +346,9 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		config.width, config.height,	// width, height
 		NULL, NULL,						// parent window, menu
 		hInstance, NULL);				// instance, param
-
+    
 	DC = GetDC(WND);
-
+    
 	const int pixelAttribs[] = {
 		WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
 		WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
@@ -363,36 +363,36 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		WGL_SAMPLES_ARB, 4,
 		0
 	};
-
+    
 	int pixelFormatID; UINT numFormats;
 	const bool status = wglChoosePixelFormatARB(DC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
-
+    
 	if (status == false || numFormats == 0) {
 		showMessage("wglChoosePixelFormatARB() failed.");
 		return 1;
 	}
-
+    
 	PIXELFORMATDESCRIPTOR PFD;
 	DescribePixelFormat(DC, pixelFormatID, sizeof(PFD), &PFD);
 	SetPixelFormat(DC, pixelFormatID, &PFD);
-
+    
 	const int major_min = 4, minor_min = 0;
 	const int contextAttribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, major_min,
 		WGL_CONTEXT_MINOR_VERSION_ARB, minor_min,
 		WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-//		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+        //		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
 		0
 	};
-
+    
 	RC = wglCreateContextAttribsARB(DC, 0, contextAttribs);
 	if (RC == NULL) {
 		showMessage("wglCreateContextAttribsARB() failed.");
 		return 1;
 	}
-
+    
 	// delete temporary context and window
-
+    
 	wglMakeCurrent(NULL, NULL);
 	wglDeleteContext(fakeRC);
 	ReleaseDC(fakeWND, fakeDC);
@@ -401,10 +401,10 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		showMessage("wglMakeCurrent() failed.");
 		return 1;
 	}
-
+    
 	SetWindowText(WND, reinterpret_cast<LPCSTR>(glGetString(GL_VERSION)));
 	ShowWindow(WND, nCmdShow);
-
+    
 	Win32GetOpenGLFunction(glGenVertexArrays);
 	Win32GetOpenGLFunction(glBindVertexArray);
 	Win32GetOpenGLFunction(glGenBuffers);
@@ -428,17 +428,17 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 	Win32GetOpenGLFunction(glUniform1f);
 	Win32GetOpenGLFunction(glUniformMatrix4fv);
 	Win32GetOpenGLFunction(glBindFramebuffer);
-
-
+    
+    
 	// Get Buffer Size information
 	int bufferWidth = 1040, bufferHeight = 759;
-
+    
 	// Setup Viewport size
 	glViewport(0, 0, bufferWidth, bufferHeight);
-
+    
 	CreateTriangle();
 	CompileShaders();
-
+    
 	MSG Message;
 	bool active = true;
 	while (active) 
@@ -451,7 +451,7 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 			TranslateMessage(&Message);
 			DispatchMessageA(&Message);
 		}
-
+        
 		if (direction)
 		{
 			triOffset += triIncrement;
@@ -460,18 +460,18 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		{
 			triOffset -= triIncrement;
 		}
-
+        
 		if (abs(triOffset) >= triMaxoffset)
 		{
 			direction = !direction;
 		}
-
+        
 		curAngle += 0.01f;
 		if (curAngle >= 360)
 		{
 			curAngle -= 360;
 		}
-
+        
 		if (sizeDirection)
 		{
 			curSize += 0.0001f;
@@ -480,37 +480,37 @@ windowClass = MAKEINTATOM(registerClass(hInstance));
 		{
 			curSize -= 0.0001f;
 		}
-
+        
 		if (curSize >= maxSize || curSize <= minSize)
 		{
 			sizeDirection = !sizeDirection;
 		}
-
+        
 		// Clear window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+        
 		glUseProgram(shader);
-
+        
 		GLfloat modelviewmatrix[] = {
 			1.0f , 0.0f , 0.0f , 0.0f,
 			0.0f, 1.0f, 0.0f , 0.0f ,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
-				};
-
-
+        };
+        
+        
 		glUniform1f(uniformModel, triOffset);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, modelviewmatrix);
-
-
+        
+        
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);
-
-
+        
+        
 		glUseProgram(0);
-
+        
 		SwapBuffers(DC);
 	}
     
@@ -522,16 +522,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
 		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE) {
-				PostQuitMessage(0);
-			}
-			break;
+        if (wParam == VK_ESCAPE) {
+            PostQuitMessage(0);
+        }
+        break;
 		case WM_CLOSE:
-			PostQuitMessage(0);
-			break;
+        PostQuitMessage(0);
+        break;
 		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(hWnd, message, wParam, lParam);
 	}
-
+    
 	return 0;
 }
