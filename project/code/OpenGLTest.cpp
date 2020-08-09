@@ -6,6 +6,7 @@
 #include "GL/wglext.h"
 #include <stdio.h>
 #include <cmath>
+#include "shaderHelper.cpp"
 
 #pragma comment (lib, "opengl32.lib")
 
@@ -92,30 +93,6 @@ float maxSize = 0.8f;
 float minSize = 0.1f;
 
 
-// Vertex Shader
-static const char* vShader = "									\n\
-#version 330													\n\
-                \n\
-layout (location = 0) in vec3 pos;								\n\
-                \n\
-uniform mat4 model;												\n\
-                \n\
-void main()														\n\
-{																\n\
- gl_Position = model * vec4(pos, 1.0);	\n\
-}";
-
-static const char* fShader = "			\n\
-#version 330							\n\
-          \n\
-out vec4 colour;						\n\
-          \n\
-void main()								\n\
-{										\n\
- colour = vec4(1.0, 0.0, 0.0, 1.0);	\n\
-}";
-
-
 void CreateTriangle()
 {
 	GLfloat vertices[] = {
@@ -168,6 +145,9 @@ void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 	glAttachShader(theProgram, theShader);
 }
 
+
+
+
 void CompileShaders()
 {
 	shader = glCreateProgram();
@@ -177,6 +157,12 @@ void CompileShaders()
 		printf("Error creating shader program!\n");
 		return;
 	}
+    
+    
+    char vShader[BUFFERSIZE];
+    char fShader[BUFFERSIZE];
+    ReadShader("shaders/shader.vert", vShader);
+    ReadShader("shaders/shader.frag", fShader);
     
 	AddShader(shader, vShader, GL_VERTEX_SHADER);
 	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
