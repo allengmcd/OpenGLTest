@@ -412,7 +412,7 @@ WinMain(HINSTANCE hInstance,
         
 		SwapBuffers(DC);
         
-        timeValue++;
+        timeValue += 0.001;
 	}
     
     return(0);
