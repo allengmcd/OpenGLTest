@@ -6,6 +6,9 @@
 #include "GL/wglext.h"
 #include <stdio.h>
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "shaderHelper.cpp"
 #include "OpenGLHelper.cpp"
 
@@ -399,10 +402,20 @@ WinMain(HINSTANCE hInstance,
         // be sure to activate the shader before any calls to glUniform
         glUseProgram(shader);
         
-        // update shader uniform
+        
+        
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        // create transformations
+        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        transform = glm::rotate(transform, greenValue, glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        
+        // update shader uniform
         int vertexColorLocation = glGetUniformLocation(shader, "ourColor");
+        int vertexTransformLocation = glGetUniformLocation(shader, "transform");
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
         
         // render the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
