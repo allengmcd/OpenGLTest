@@ -18,6 +18,7 @@ typedef void WINAPI type_glBufferData(GLenum target, GLsizeiptr size, const void
 typedef void WINAPI type_glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
 typedef void WINAPI type_glEnableVertexAttribArray(GLuint index);
 typedef void WINAPI type_glUniform1f(GLint location, GLfloat v0);
+typedef void WINAPI type_glUniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
 typedef void WINAPI type_glUniformMatrix4fv(GLint location,	GLsizei count, GLboolean transpose, const GLfloat* value);
 typedef void WINAPI type_glCompileShader(GLuint shader);
 typedef GLuint WINAPI type_glCreateShader(GLenum shaderType);
@@ -56,6 +57,7 @@ OpenGLGlobalFunction(glValidateProgram);
 OpenGLGlobalFunction(glGetUniformLocation);
 OpenGLGlobalFunction(glUseProgram);
 OpenGLGlobalFunction(glUniform1f);
+OpenGLGlobalFunction(glUniform4f);
 OpenGLGlobalFunction(glUniformMatrix4fv);
 OpenGLGlobalFunction(glBindFramebuffer);
 
@@ -84,6 +86,7 @@ void OpenGLInit()
 	Win32GetOpenGLFunction(glGetUniformLocation);
 	Win32GetOpenGLFunction(glUseProgram);
 	Win32GetOpenGLFunction(glUniform1f);
+	Win32GetOpenGLFunction(glUniform4f);
 	Win32GetOpenGLFunction(glUniformMatrix4fv);
 	Win32GetOpenGLFunction(glBindFramebuffer);
     

@@ -61,7 +61,7 @@ void CreateTriangle()
 }
 
 
-GLuint AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
     
 	GLuint theShader = glCreateShader(shaderType);
@@ -87,8 +87,6 @@ GLuint AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 	}
     
 	glAttachShader(theProgram, theShader);
-    
-    return theShader;
 }
 
 
@@ -399,11 +397,11 @@ WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
         
         // be sure to activate the shader before any calls to glUniform
-        glUseProgram(shaderProgram);
+        glUseProgram(shader);
         
         // update shader uniform
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        int vertexColorLocation = glGetUniformLocation(shader, "ourColor");
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         
         // render the triangle
