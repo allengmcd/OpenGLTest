@@ -61,7 +61,7 @@ void CreateTriangle()
 }
 
 
-void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+GLuint AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
     
 	GLuint theShader = glCreateShader(shaderType);
@@ -87,6 +87,8 @@ void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 	}
     
 	glAttachShader(theProgram, theShader);
+    
+    return theShader;
 }
 
 
@@ -204,12 +206,12 @@ WinMain(HINSTANCE hInstance,
 	// create temporary window
     
 	HWND fakeWND = CreateWindow(
-		windowClass, "Fake Window",
-		style,
-		0, 0,						// position x, y
-		1, 1,						// width, height
-		NULL, NULL,					// parent window, menu
-		hInstance, NULL);			// instance, param
+                                windowClass, "Fake Window",
+                                style,
+                                0, 0,						// position x, y
+                                1, 1,						// width, height
+                                NULL, NULL,					// parent window, menu
+                                hInstance, NULL);			// instance, param
     
 	HDC fakeDC = GetDC(fakeWND);	// Device Context
     
@@ -270,12 +272,12 @@ WinMain(HINSTANCE hInstance,
 	// create a new window and context
     
 	WND = CreateWindow(
-		windowClass, "OpenGL Window",	// class name, window name
-		style,							// styles
-		config.posX, config.posY,		// posx, posy. If x is set to CW_USEDEFAULT y is ignored
-		config.width, config.height,	// width, height
-		NULL, NULL,						// parent window, menu
-		hInstance, NULL);				// instance, param
+                       windowClass, "OpenGL Window",	// class name, window name
+                       style,							// styles
+                       config.posX, config.posY,		// posx, posy. If x is set to CW_USEDEFAULT y is ignored
+                       config.width, config.height,	// width, height
+                       NULL, NULL,						// parent window, menu
+                       hInstance, NULL);				// instance, param
     
 	DC = GetDC(WND);
     
@@ -346,6 +348,8 @@ WinMain(HINSTANCE hInstance,
 	CreateTriangle();
 	CompileShaders();
     
+    float timeValue = 0.0f;
+    
 	MSG Message;
 	bool active = true;
 	while (active) 
@@ -359,66 +363,58 @@ WinMain(HINSTANCE hInstance,
 			DispatchMessageA(&Message);
 		}
         
-		if (direction)
-		{
-			triOffset += triIncrement;
-		}
-		else
-		{
-			triOffset -= triIncrement;
-		}
         
-		if (abs(triOffset) >= triMaxoffset)
-		{
-			direction = !direction;
-		}
-        
-		curAngle += 0.01f;
-		if (curAngle >= 360)
-		{
-			curAngle -= 360;
-		}
-        
-		if (sizeDirection)
-		{
-			curSize += 0.0001f;
-		}
-		else
-		{
-			curSize -= 0.0001f;
-		}
-        
-		if (curSize >= maxSize || curSize <= minSize)
-		{
-			sizeDirection = !sizeDirection;
-		}
-        
-		// Clear window
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-        
-		glUseProgram(shader);
-        
-		GLfloat modelviewmatrix[] = {
-			1.0f , 0.0f , 0.0f , 0.0f,
-			0.0f, 1.0f, 0.0f , 0.0f ,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
+		// set up vertex data (and buffer(s)) and configure vertex attributes
+        // ------------------------------------------------------------------
+        float vertices[] = {
+            0.5f, -0.5f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f,  // bottom left
+            0.0f,  0.5f, 0.0f   // top 
         };
         
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        glBindVertexArray(VAO);
         
-		glUniform1f(uniformModel, triOffset);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, modelviewmatrix);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        
+        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+        // glBindVertexArray(0);
         
         
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(0);
+        // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
+        // just bind it beforehand before rendering the respective triangle; this is another approach.
+        glBindVertexArray(VAO);
+        
+        
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+        // be sure to activate the shader before any calls to glUniform
+        glUseProgram(shaderProgram);
+        
+        // update shader uniform
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        
+        // render the triangle
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         
         
 		glUseProgram(0);
         
 		SwapBuffers(DC);
+        
+        timeValue++;
 	}
     
     return(0);
