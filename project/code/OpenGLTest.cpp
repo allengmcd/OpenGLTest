@@ -40,6 +40,13 @@ float maxSize = 0.8f;
 float minSize = 0.1f;
 
 
+
+GLfloat 
+Global_RotationAngleY=0, 
+Global_RotationAngleX=0,
+Global_RotationAngleZ=0;
+
+
 void CreateTriangle()
 {
 	GLfloat vertices[] = {
@@ -407,9 +414,10 @@ WinMain(HINSTANCE hInstance,
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
         // create transformations
         glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, greenValue, glm::vec3(0.0f, 0.0f, 1.0f));
-        
+        //transform = glm::translate(transform, glm::vec3(0.0f, greenValue, 0.0f));
+        transform = glm::rotate(transform, Global_RotationAngleX, glm::vec3(1.0f, 0.0f, 0.0f));
+        transform = glm::rotate(transform, Global_RotationAngleY, glm::vec3(0.0f, 1.0f, 0.0f));
+        transform = glm::rotate(transform, Global_RotationAngleZ, glm::vec3(0.0f, 0.0f, 1.0f));
         
         // update shader uniform
         int vertexColorLocation = glGetUniformLocation(shader, "ourColor");
@@ -435,13 +443,65 @@ WinMain(HINSTANCE hInstance,
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
-		case WM_KEYDOWN:
-        if (wParam == VK_ESCAPE) {
-            PostQuitMessage(0);
-        }
-        break;
 		case WM_CLOSE:
         PostQuitMessage(0);
+        break;
+        case WM_KEYDOWN:
+        {
+            if (wParam == VK_ESCAPE) {
+                PostQuitMessage(0);
+                break;
+            }
+            switch(wParam)
+            {
+                case 0x41://A key
+                Global_RotationAngleY+=0.2;
+                
+                break;
+                case 0x42://B key
+                case 0x43://C key
+                case 0x44://D key
+                Global_RotationAngleY-=0.2;
+                
+                break;
+                case 0x45://E key
+                Global_RotationAngleZ-=0.2;
+                
+                break;
+                case 0x46://F key
+                case 0x47://G key
+                case 0x48://H key
+                case 0x49://I key
+                case 0x4A://J key
+                case 0x4B://K key
+                case 0x4C://L key
+                case 0x4D://M key
+                case 0x4E://N key
+                case 0x4F://O key
+                case 0x50://P key
+                case 0x51://Q key
+                Global_RotationAngleZ+=0.2;
+                
+                break;
+                case 0x52://R key
+                case 0x53://S key
+                Global_RotationAngleX-=0.2;
+                
+                break;
+                case 0x54://T key
+                case 0x55://U key
+                case 0x56://V key
+                case 0x57://W key
+                Global_RotationAngleX+=0.2;
+                
+                break;
+                case 0x58://X key
+                case 0x59://Y key
+                case 0x5A://Z key
+                default:
+                break;
+            }
+        }
         break;
 		default:
         return DefWindowProc(hWnd, message, wParam, lParam);
