@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <GL/gl.h>
-#include "curve.cpp"
-#include "surfaces.cpp"
+#include "curve_old.cpp"
+#include "surfaces_old.cpp"
 
 char *className = "OpenGL";
 char *windowName = "OpenGL Cube";

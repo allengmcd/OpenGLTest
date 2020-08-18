@@ -5,12 +5,17 @@
 #include "GL/wglext.h"
 #include <stdio.h>
 
-void CreateTriangle(GLuint* VAO, GLuint* VBO)
+void CreateCurve(GLuint* VAO, GLuint* VBO)
 {
 	GLfloat vertices[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f 
+		-0.4f,0.0f,0.0f,
+        -0.2f,-0.4f,0.0f,
+        0.0f,0.4f,0.0f,
+        0.2f,0.6f,0.0f,
+        0.4f,0.0f,0.0f,
+        0.6f,0.4f,0.0f,
+        0.8f,0.2f,0.0f,
+        1.0f,0.2f,0.0f
 	};
     
 	glGenVertexArrays(1, VAO);

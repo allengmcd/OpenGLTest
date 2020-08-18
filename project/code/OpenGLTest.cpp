@@ -11,6 +11,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "shaderHelper.cpp"
 #include "OpenGLHelper.cpp"
+#include "Curves.cpp"
+#include "Surfaces.cpp"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -45,60 +47,6 @@ GLfloat
 Global_RotationAngleY=0, 
 Global_RotationAngleX=0,
 Global_RotationAngleZ=0;
-
-
-void CreateCurve()
-{
-	GLfloat vertices[] = {
-		-0.4f,0.0f,0.0f,
-        -0.2f,-0.4f,0.0f,
-        0.0f,0.4f,0.0f,
-        0.2f,0.6f,0.0f,
-        0.4f,0.0f,0.0f,
-        0.6f,0.4f,0.0f,
-        0.8f,0.2f,0.0f,
-        1.0f,0.2f,0.0f
-	};
-    
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-    
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-    
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-	glBindVertexArray(0);
-}
-
-
-void CreateTriangle()
-{
-	GLfloat vertices[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f 
-	};
-    
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-    
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-    
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-	glBindVertexArray(0);
-}
-
 
 void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
 {
@@ -401,7 +349,7 @@ WinMain(HINSTANCE hInstance,
 		}
         
         
-        CreateCurve();
+        CreateCurve(&VAO, &VBO);
         
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
         // just bind it beforehand before rendering the respective triangle; this is another approach.
@@ -434,7 +382,7 @@ WinMain(HINSTANCE hInstance,
         
         // render the triangle
         //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_LINE_STRIP, 0, 6);
+        glDrawArrays(GL_LINE_STRIP, 0, 8);
         
 		glUseProgram(0);
         
