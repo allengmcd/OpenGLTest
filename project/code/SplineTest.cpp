@@ -46,7 +46,8 @@ redraw(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     
-    float curve[8][3] = {{-0.4f,0.0f,0.0f},{-0.2f,-0.4f,0.0f},{0.0f,0.4f,0.0f},{0.2f,0.6f,0.0f},{0.4f,0.0f,0.0f},{0.6f,0.4f,0.0f},{0.8f,0.2f,0.0f},{1.0f,0.2f,0.0f}};
+    float curve[8][3] = {{-0.4f,0.0f,0.0f},{-0.2f,-0.4f,0.0f},{0.0f,0.4f,0.0f},{0.2f,0.6f,0.0f},{0.4f,0.0f,0.0f},
+        {0.6f,0.4f,0.0f},{0.8f,0.2f,0.0f},{1.0f,0.2f,0.0f}};
     //float tangents[4][3] = {{1.0f,1.0f,0.0f},{0.0f,-1.0f,0.0f},{1.0f,0.1f,0.0f},{0.0f,1.0f,0.0f}};
     //float** curve = new float*[3];
     
@@ -170,10 +171,10 @@ setupPalette(HDC hDC)
 
 LRESULT APIENTRY
 WndProc(
-HWND hWnd,
-UINT message,
-WPARAM wParam,
-LPARAM lParam)
+        HWND hWnd,
+        UINT message,
+        WPARAM wParam,
+        LPARAM lParam)
 {
     switch (message) {
         case WM_CREATE:
@@ -307,10 +308,10 @@ LPARAM lParam)
 
 int APIENTRY
 WinMain(
-HINSTANCE hCurrentInst,
-HINSTANCE hPreviousInst,
-LPSTR lpszCmdLine,
-int nCmdShow)
+        HINSTANCE hCurrentInst,
+        HINSTANCE hPreviousInst,
+        LPSTR lpszCmdLine,
+        int nCmdShow)
 {
     WNDCLASS wndClass;
     HWND hWnd;
@@ -331,10 +332,10 @@ int nCmdShow)
     
     /* create window */
     hWnd = CreateWindow(
-        className, windowName,
-        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-        winX, winY, winWidth, winHeight,
-        NULL, NULL, hCurrentInst, NULL);
+                        className, windowName,
+                        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
+                        winX, winY, winWidth, winHeight,
+                        NULL, NULL, hCurrentInst, NULL);
     
     /* display window */
     ShowWindow(hWnd, nCmdShow);
