@@ -144,11 +144,11 @@
 			}
 		},
 		{
-			"file": "project/code/project.4coder",
+			"file": "project/code/OpenGLHelper.cpp",
 			"settings":
 			{
-				"buffer_size": 649,
-				"line_ending": "Windows"
+				"buffer_size": 4286,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -163,6 +163,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"package control insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Install Package Control"
+			]
 		],
 		"width": 0.0
 	},
@@ -186,10 +194,14 @@
 	[
 		"/E/Git/OpenGLTest",
 		"/E/Git/OpenGLTest/project",
-		"/E/Git/OpenGLTest/project/code"
+		"/E/Git/OpenGLTest/project/code",
+		"/E/Git/OpenGLTest/project/code/shaders"
 	],
 	"file_history":
 	[
+		"/E/Git/OpenGLTest/.vscode/c_cpp_properties.json",
+		"/E/Git/OpenGLTest/project/code/shaders/shader.frag",
+		"/E/Git/OpenGLTest/project/code/shaders/shader.vert",
 		"/E/Documents/HandmadeHero/Day 30/handmade/misc/.emacs",
 		"/C/qp/qpc/examples/ucos-ii/arm-cm/dpp_ek-tm4c123gxl/gnu/flash.bat",
 		"/C/qp/qpc/examples/ucos-ii/arm-cm/dpp_ek-tm4c123gxl/gnu/Makefile",
@@ -314,10 +326,7 @@
 		"/E/UnityProjects/2DFundamentals/CharacterControl/Character Control/Assets/Assets/Scripts/PlayerController.cs",
 		"/E/Graphics/MIT/Computer Graphics/zero/MonkeyBox.obj",
 		"/E/Graphics/MIT/Computer Graphics/MonkeyBox.obj",
-		"/E/Games/Astroids Project 2/GraphicsTestBuild/Test - Copy.html",
-		"/E/Graphics/MIT/Computer Graphics/one/distrib/swp/core - Copy.swp",
-		"/C/Users/Allen McDermott/Documents/OpenGL/Ballenger Demo/Project/Levels/terrain01.raw",
-		"/C/Users/Allen McDermott/Documents/OpenGL/Ballenger Demo/Project/Levels/terrain01.psd"
+		"/E/Games/Astroids Project 2/GraphicsTestBuild/Test - Copy.html"
 	],
 	"find":
 	{
@@ -352,7 +361,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -368,8 +377,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								1054,
+								1054
 							]
 						],
 						"settings":
@@ -377,39 +386,45 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5555.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
 					"buffer": 1,
-					"file": "project/code/project.4coder",
-					"semi_transient": true,
+					"file": "project/code/OpenGLHelper.cpp",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 649,
+						"buffer_size": 4286,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								875,
+								875
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 960.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -432,11 +447,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":

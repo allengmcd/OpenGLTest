@@ -349,8 +349,33 @@ WinMain(HINSTANCE hInstance,
 		}
         
         
-        CreateCurve(&VAO, &VBO);
-        
+        //CreateCurve(&VAO, &VBO, );
+		GLfloat curve[8][3] = 
+		{
+			{-0.4f,0.0f,0.0f},
+			{-0.2f,-0.4f,0.0f},
+			{0.0f,0.4f,0.0f},
+			{0.2f,0.6f,0.0f},
+			{0.4f,0.0f,0.0f},
+			{0.6f,0.4f,0.0f},
+			{0.8f,0.2f,0.0f},
+			{1.0f,0.2f,0.0f}
+		};
+
+		GLfloat vertices[] = {
+			-0.4f,0.0f,0.0f,
+			-0.2f,-0.4f,0.0f,
+			0.0f,0.4f,0.0f,
+			0.2f,0.6f,0.0f,
+			0.4f,0.0f,0.0f,
+			0.6f,0.4f,0.0f,
+			0.8f,0.2f,0.0f,
+			1.0f,0.2f,0.0f
+		};
+
+        BezierCurve(curve, 8, 100, &VAO, &VBO);
+		//CreateCurve(&VAO, &VBO, vertices, 24);
+
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
         // just bind it beforehand before rendering the respective triangle; this is another approach.
         glBindVertexArray(VAO);
