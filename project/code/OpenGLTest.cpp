@@ -373,7 +373,7 @@ WinMain(HINSTANCE hInstance,
 			1.0f,0.2f,0.0f
 		};
 
-        BezierCurve(curve, 8, 100, &VAO, &VBO);
+        BezierCurve(curve, 8, 12, &VAO, &VBO);
 		//CreateCurve(&VAO, &VBO, vertices, 24);
 
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
@@ -407,7 +407,7 @@ WinMain(HINSTANCE hInstance,
         
         // render the triangle
         //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_LINE_STRIP, 0, 8);
+        glDrawArrays(GL_LINE_STRIP, 0, 36);
         
 		glUseProgram(0);
         

@@ -43,20 +43,10 @@ int BezierCurve(GLfloat vertex[][3], int length, int steps, GLuint* VAO, GLuint*
         return -1;
     }
     
-	GLfloat *vertices = (GLfloat*)malloc(sizeof(GLfloat)*length*3);
+	GLfloat *vertices = (GLfloat*)malloc(sizeof(GLfloat)*100*3);
 	int counter=0;
-	/* GLfloat vertices[] = {
-			-0.4f,0.0f,0.0f,
-			-0.2f,-0.4f,0.0f,
-			0.0f,0.4f,0.0f,
-			0.2f,0.6f,0.0f,
-			0.4f,0.0f,0.0f,
-			0.6f,0.4f,0.0f,
-			0.8f,0.2f,0.0f,
-			1.0f,0.2f,0.0f
-		}; */
 
-   /*  for(int k = 0; k < length; k+=4)
+    for(int k = 0; k < length; k+=4)
     {
         //glBegin(GL_LINES);
         float xPrev= vertex[k][0], yPrev = vertex[k][1], zPrev = vertex[k][2];
@@ -80,20 +70,23 @@ int BezierCurve(GLfloat vertex[][3], int length, int steps, GLuint* VAO, GLuint*
             yPrev = valY;
             zPrev = valZ;
 			
+			vertices[counter] = valX;
+			vertices[counter+1] = valY;
+			vertices[counter+2] = valZ;
 			counter += 3;
         }
         //glVertex3f(xPrev, yPrev, zPrev);
         //glVertex3f(vertex[k+3][0], vertex[k+3][1], vertex[k+3][1]);
-    } */
+    }
     
 
-	for(int i = 0; i <= length; i++)
+	/* for(int i = 0; i < length; i++)
 	{
 		vertices[i*3] = vertex[i][0];
 		vertices[i*3+1] = vertex[i][1];
 		vertices[i*3+2] = vertex[i][2];
 	}
-
+ */
 
 	CreateCurve(VAO, VBO, vertices, length*3);
 
