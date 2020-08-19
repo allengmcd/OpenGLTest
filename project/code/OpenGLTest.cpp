@@ -350,7 +350,7 @@ WinMain(HINSTANCE hInstance,
         
         
         //CreateCurve(&VAO, &VBO, );
-		GLfloat curve[8][3] = 
+		GLfloat curve[13][3] = 
 		{
 			{-0.4f,0.0f,0.0f},
 			{-0.2f,-0.4f,0.0f},
@@ -359,21 +359,18 @@ WinMain(HINSTANCE hInstance,
 			{0.4f,0.0f,0.0f},
 			{0.6f,0.4f,0.0f},
 			{0.8f,0.2f,0.0f},
-			{1.0f,0.2f,0.0f}
+			{1.0f,-0.2f,0.0f},
+			{1.7f,0.2f,0.0f},
+			{-1.0f,0.2f,0.0f},
+			{1.2f,-0.2f,0.0f},
+			{-1.0f,-0.2f,0.0f},
+			{1.5f,-0.2f,0.0f}
 		};
 
-		GLfloat vertices[] = {
-			-0.4f,0.0f,0.0f,
-			-0.2f,-0.4f,0.0f,
-			0.0f,0.4f,0.0f,
-			0.2f,0.6f,0.0f,
-			0.4f,0.0f,0.0f,
-			0.6f,0.4f,0.0f,
-			0.8f,0.2f,0.0f,
-			1.0f,0.2f,0.0f
-		};
+		GLuint steps = 100;
+		GLuint curveLength = 13;
 
-        BezierCurve(curve, 8, 12, &VAO, &VBO);
+        BezierCurve(curve, curveLength, steps, &VAO, &VBO);
 		//CreateCurve(&VAO, &VBO, vertices, 24);
 
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
@@ -407,7 +404,7 @@ WinMain(HINSTANCE hInstance,
         
         // render the triangle
         //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_LINE_STRIP, 0, 36);
+        glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
         
 		glUseProgram(0);
         
