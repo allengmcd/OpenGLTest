@@ -13,7 +13,7 @@
 #include "shaderHelper.cpp"
 #include "Curves.cpp"
 #include "Surfaces.cpp"
-
+  
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 
