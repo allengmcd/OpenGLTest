@@ -5,6 +5,11 @@
 #include "GL/wglext.h"
 #include <stdio.h>
 
+void BicubicSurface(GLuint* VAO, GLuint* VBO)
+{
+
+}
+
 void CreateTriangle(GLuint* VAO, GLuint* VBO)
 {
 	GLfloat vertices[] = {

@@ -35,7 +35,11 @@ float bezFunc(int i, int n, float t, float P)
 	return (binCoe * POW(1-t, n-i) * POW(t, i) * P);
 }
 
-
+/**
+ * BezierCurve
+ * 
+ * Length must be greater than 4 and increments by 3 afterwards. 
+ * **/
 int BezierCurve(GLfloat vertex[][3], int length, int steps, GLuint* VAO, GLuint* VBO)
 {
     if(length < 4)

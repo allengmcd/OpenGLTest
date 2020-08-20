@@ -9,8 +9,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "shaderHelper.cpp"
 #include "OpenGLHelper.cpp"
+#include "shaderHelper.cpp"
 #include "Curves.cpp"
 #include "Surfaces.cpp"
 
@@ -47,80 +47,6 @@ GLfloat
 Global_RotationAngleY=0, 
 Global_RotationAngleX=0,
 Global_RotationAngleZ=0;
-
-void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
-{
-    
-	GLuint theShader = glCreateShader(shaderType);
-    
-	const GLchar* theCode[1];
-	theCode[0] = shaderCode;
-    
-	GLint codeLength[1];
-	codeLength[0] = strlen(shaderCode);
-    
-	glShaderSource(theShader, 1, theCode, codeLength);
-	glCompileShader(theShader);
-    
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
-    
-	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
-	if (!result)
-	{
-		glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
-		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
-		return;
-	}
-    
-	glAttachShader(theProgram, theShader);
-}
-
-
-
-
-void CompileShaders()
-{
-	shader = glCreateProgram();
-    
-	if (!shader)
-	{
-		printf("Error creating shader program!\n");
-		return;
-	}
-    
-    
-    char vShader[BUFFERSIZE];
-    char fShader[BUFFERSIZE];
-    ReadShader("shaders/shader.vert", vShader);
-    ReadShader("shaders/shader.frag", fShader);
-    
-	AddShader(shader, vShader, GL_VERTEX_SHADER);
-	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
-    
-	GLint result = 0;
-	GLchar eLog[1024] = { 0 };
-    
-	glLinkProgram(shader);
-	glGetProgramiv(shader, GL_LINK_STATUS, &result);
-	if (!result)
-	{
-		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
-		printf("Error linking program: '%s'\n", eLog);
-		return;
-	}
-    
-	glValidateProgram(shader);
-	glGetProgramiv(shader, GL_VALIDATE_STATUS, &result);
-	if (!result)
-	{
-		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
-		printf("Error validating program: '%s'\n", eLog);
-		return;
-	}
-    
-	uniformModel = glGetUniformLocation(shader, "model");
-}
 
 ATOM registerClass(HINSTANCE hInstance) {
     
@@ -331,7 +257,8 @@ WinMain(HINSTANCE hInstance,
 	glViewport(0, 0, bufferWidth, bufferHeight);
     
 	//CreateTriangle();
-    CompileShaders();
+	unsigned int shaderID = CompileShaders("shaders/shader.vert", "shaders/shader.frag");
+	unsigned int lighterID = CompileShaders("shaders/lighter_1.vert", "shaders/lighter_1.frag");
     
     float timeValue = 0.0f;
     
@@ -370,8 +297,8 @@ WinMain(HINSTANCE hInstance,
 		GLuint steps = 100;
 		GLuint curveLength = 13;
 
-        BezierCurve(curve, curveLength, steps, &VAO, &VBO);
-		//CreateCurve(&VAO, &VBO, vertices, 24);
+        //BezierCurve(curve, curveLength, steps, &VAO, &VBO);
+		CreateTriangle(&VAO, &VBO);
 
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
         // just bind it beforehand before rendering the respective triangle; this is another approach.
@@ -403,8 +330,8 @@ WinMain(HINSTANCE hInstance,
         glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
         
         // render the triangle
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
         
 		glUseProgram(0);
         

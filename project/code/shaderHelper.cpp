@@ -1,8 +1,9 @@
-
-#include <stdio.h>
-#include <cmath>
 #include <SDKDDKVer.h>
 #include <windows.h>
+#include <GL/GL.h>
+#include "GL/glext.h"
+#include "GL/wglext.h"
+#include <stdio.h>
 
 #define BUFFERSIZE 1024
 
@@ -81,4 +82,80 @@ void ReadShader(char* fileName, char* outShader)
             continue;
         }
     }
+}
+
+void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType)
+{
+    
+	GLuint theShader = glCreateShader(shaderType);
+    
+	const GLchar* theCode[1];
+	theCode[0] = shaderCode;
+    
+	GLint codeLength[1];
+	codeLength[0] = strlen(shaderCode);
+    
+	glShaderSource(theShader, 1, theCode, codeLength);
+	glCompileShader(theShader);
+    
+	GLint result = 0;
+	GLchar eLog[1024] = { 0 };
+    
+	glGetShaderiv(theShader, GL_COMPILE_STATUS, &result);
+	if (!result)
+	{
+		glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
+		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
+		return;
+	}
+    
+	glAttachShader(theProgram, theShader);
+}
+
+
+
+
+unsigned int CompileShaders(char* vertexPath, char* fragmentPath)
+{
+	unsigned int shader = glCreateProgram();
+    
+	if (!shader)
+	{
+		printf("Error creating shader program!\n");
+		return -1;
+	}
+    
+    
+    char vShader[BUFFERSIZE];
+    char fShader[BUFFERSIZE];
+    ReadShader(vertexPath, vShader);
+    ReadShader(fragmentPath, fShader);
+    
+	AddShader(shader, vShader, GL_VERTEX_SHADER);
+	AddShader(shader, fShader, GL_FRAGMENT_SHADER);
+
+	GLint result = 0;
+	GLchar eLog[1024] = { 0 };
+    
+	glLinkProgram(shader);
+	glGetProgramiv(shader, GL_LINK_STATUS, &result);
+	if (!result)
+	{
+		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
+		printf("Error linking program: '%s'\n", eLog);
+		return -1;
+	}
+    
+	glValidateProgram(shader);
+	glGetProgramiv(shader, GL_VALIDATE_STATUS, &result);
+	if (!result)
+	{
+		glGetProgramInfoLog(shader, sizeof(eLog), NULL, eLog);
+		printf("Error validating program: '%s'\n", eLog);
+		return -1;
+	}
+    
+	//uniformModel = glGetUniformLocation(shader, "model");
+
+	return shader;
 }
