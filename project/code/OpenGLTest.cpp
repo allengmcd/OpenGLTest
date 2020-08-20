@@ -258,7 +258,7 @@ WinMain(HINSTANCE hInstance,
     
 	//CreateTriangle();
 	unsigned int shaderID = CompileShaders("shaders/shader.vert", "shaders/shader.frag");
-	unsigned int lighterID = CompileShaders("shaders/lighter_1.vert", "shaders/lighter_1.frag");
+	unsigned int lighterID = CompileShaders("shaders/lighting_1.vert", "shaders/lighting_1.frag");
     
     float timeValue = 0.0f;
     
@@ -311,7 +311,7 @@ WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
         
         // be sure to activate the shader before any calls to glUniform
-        glUseProgram(shader);
+        glUseProgram(shaderID);
         
         
         
@@ -324,16 +324,17 @@ WinMain(HINSTANCE hInstance,
         transform = glm::rotate(transform, Global_RotationAngleZ, glm::vec3(0.0f, 0.0f, 1.0f));
         
         // update shader uniform
-        int vertexColorLocation = glGetUniformLocation(shader, "ourColor");
-        int vertexTransformLocation = glGetUniformLocation(shader, "transform");
+        int vertexColorLocation = glGetUniformLocation(shaderID, "ourColor");
+        int vertexTransformLocation = glGetUniformLocation(shaderID, "transform");
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
         
+		
         // render the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
         //glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
         
-		glUseProgram(0);
+		//glUseProgram(shaderID);
         
 		SwapBuffers(DC);
         
