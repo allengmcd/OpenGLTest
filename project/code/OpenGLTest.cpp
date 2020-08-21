@@ -253,6 +253,8 @@ WinMain(HINSTANCE hInstance,
 	// Get Buffer Size information
 	int bufferWidth = 1040, bufferHeight = 759;
     
+ 	//glEnable(GL_DEPTH_TEST);
+
 	// Setup Viewport size
 	glViewport(0, 0, bufferWidth, bufferHeight);
     
@@ -261,6 +263,13 @@ WinMain(HINSTANCE hInstance,
 	unsigned int lighterID = CompileShaders("shaders/lighting_1.vert", "shaders/lighting_1.frag");
     
     float timeValue = 0.0f;
+
+	CreateTriangle(&VAO, &VBO);
+
+	// second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
     
 	MSG Message;
 	bool active = true;
@@ -275,37 +284,11 @@ WinMain(HINSTANCE hInstance,
 			DispatchMessageA(&Message);
 		}
         
-
-        
         
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-		const glm::vec3 objectColor = {1.0f, 0.5f, 0.31f};
-		const glm::vec3 lightColor = {1.0f, 0.5f, 0.31f};
-		const glm::vec3 lightPos = {1.0f, 0.5f, 0.31f};
-		const glm::vec3 viewPos = {1.0f, 0.5f, 0.31f};
-
-        glUseProgram(lighterID);
-		glUniform3fv(glGetUniformLocation(lighterID, "objectColor"), 1, &objectColor[0]); 
-        glUniform3fv(glGetUniformLocation(lighterID, "lightColor"), 1, &lightColor[0]); 
-        glUniform3fv(glGetUniformLocation(lighterID, "lightPos"), 1, &lightPos[0]); 
- 		glUniform3fv(glGetUniformLocation(lighterID, "viewPos"), 1, &viewPos[0]); 
-
-        // view/projection transformations
-       // glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        //glm::mat4 view = camera.GetViewMatrix();
-        //lightingShader.setMat4("projection", projection);
-        //lightingShader.setMat4("view", view);
-
-        // world transformation
-        glm::mat4 model = glm::mat4(1.0f);
-       // lightingShader.setMat4("model", model);
-
-
-
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         
         //CreateCurve(&VAO, &VBO, );
@@ -330,14 +313,14 @@ WinMain(HINSTANCE hInstance,
 		GLuint curveLength = 13;
 
         //BezierCurve(curve, curveLength, steps, &VAO, &VBO);
-		CreateTriangle(&VAO, &VBO);
+		//CreateTriangle(&VAO, &VBO);
 
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
         // just bind it beforehand before rendering the respective triangle; this is another approach.
-        glBindVertexArray(VAO);
+        //glBindVertexArray(VAO);
 
         // be sure to activate the shader before any calls to glUniform
-        glUseProgram(shaderID);
+    /*     glUseProgram(shaderID);
         
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
         // create transformations
@@ -353,13 +336,67 @@ WinMain(HINSTANCE hInstance,
         //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
         glUniform4f(vertexColorLocation, 0.0f, 0.2f, 0.4f, 0.3f);
         glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
-        
+         */
 		
         // render the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
         //glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
         
-		//glUseProgram(shaderID);
+		glUseProgram(shaderID);
+
+
+		const glm::vec3 objectColor = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 lightColor = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 lightPos = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 viewPos = {1.0f, 0.5f, 0.31f};
+
+        glUseProgram(lighterID);
+		glUniform3fv(glGetUniformLocation(lighterID, "objectColor"), 1, &objectColor[0]); 
+        glUniform3fv(glGetUniformLocation(lighterID, "lightColor"), 1, &lightColor[0]); 
+        glUniform3fv(glGetUniformLocation(lighterID, "lightPos"), 1, &lightPos[0]); 
+ 		glUniform3fv(glGetUniformLocation(lighterID, "viewPos"), 1, &viewPos[0]); 
+
+
+
+        // view/projection transformations
+        glUseProgram(shaderID);
+		const float ZOOM = 45.0f;
+        glm::mat4 projection = glm::perspective(glm::radians(ZOOM), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 view = camera.GetViewMatrix();
+		glm::vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 Front= glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 Up= glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::mat4 view = glm::lookAt(Position, Position + Front, Up);
+		glUniformMatrix4fv(glGetUniformLocation(lighterID, "projection"), 1, GL_FALSE, &projection[0][0]);
+	   	glUniformMatrix4fv(glGetUniformLocation(lighterID, "view"), 1, GL_FALSE, &view[0][0]);
+
+        // world transformation
+        glm::mat4 model = glm::mat4(1.0f);
+	   	glUniformMatrix4fv(glGetUniformLocation(lighterID, "model"), 1, GL_FALSE, &model[0][0]);
+
+
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+ // also draw the lamp object
+        //lightCubeShader.use();
+		glUseProgram(shaderID);
+		glUniformMatrix4fv(glGetUniformLocation(shaderID, "projection"), 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderID, "view"), 1, GL_FALSE, &view[0][0]);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		glUniformMatrix4fv(glGetUniformLocation(shaderID, "model"), 1, GL_FALSE, &model[0][0]);
+
+
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
         
 		SwapBuffers(DC);
         
