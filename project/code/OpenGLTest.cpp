@@ -275,6 +275,38 @@ WinMain(HINSTANCE hInstance,
 			DispatchMessageA(&Message);
 		}
         
+
+        
+        
+        // render
+        // ------
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+		const glm::vec3 objectColor = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 lightColor = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 lightPos = {1.0f, 0.5f, 0.31f};
+		const glm::vec3 viewPos = {1.0f, 0.5f, 0.31f};
+
+        glUseProgram(lighterID);
+		glUniform3fv(glGetUniformLocation(lighterID, "objectColor"), 1, &objectColor[0]); 
+        glUniform3fv(glGetUniformLocation(lighterID, "lightColor"), 1, &lightColor[0]); 
+        glUniform3fv(glGetUniformLocation(lighterID, "lightPos"), 1, &lightPos[0]); 
+ 		glUniform3fv(glGetUniformLocation(lighterID, "viewPos"), 1, &viewPos[0]); 
+
+        // view/projection transformations
+       // glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        //glm::mat4 view = camera.GetViewMatrix();
+        //lightingShader.setMat4("projection", projection);
+        //lightingShader.setMat4("view", view);
+
+        // world transformation
+        glm::mat4 model = glm::mat4(1.0f);
+       // lightingShader.setMat4("model", model);
+
+
+
+
         
         //CreateCurve(&VAO, &VBO, );
 		GLfloat curve[13][3] = 
@@ -303,17 +335,9 @@ WinMain(HINSTANCE hInstance,
         // bind the VAO (it was already bound, but just to demonstrate): seeing as we only have a single VAO we can 
         // just bind it beforehand before rendering the respective triangle; this is another approach.
         glBindVertexArray(VAO);
-        
-        
-        // render
-        // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
+
         // be sure to activate the shader before any calls to glUniform
         glUseProgram(shaderID);
-        
-        
         
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
         // create transformations
@@ -326,7 +350,8 @@ WinMain(HINSTANCE hInstance,
         // update shader uniform
         int vertexColorLocation = glGetUniformLocation(shaderID, "ourColor");
         int vertexTransformLocation = glGetUniformLocation(shaderID, "transform");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        glUniform4f(vertexColorLocation, 0.0f, 0.2f, 0.4f, 0.3f);
         glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
         
 		
