@@ -271,6 +271,13 @@ WinMain(HINSTANCE hInstance,
     glGenVertexArrays(1, &lightCubeVAO);
     glBindVertexArray(lightCubeVAO);
     
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // note that we update the lamp's position attribute's stride to reflect the updated buffer data
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+
 	MSG Message;
 	bool active = true;
 	while (active) 
@@ -342,7 +349,7 @@ WinMain(HINSTANCE hInstance,
         //glDrawArrays(GL_TRIANGLES, 0, 36);
         //glDrawArrays(GL_LINE_STRIP, 0, steps*((curveLength-4)/3));
         
-		glUseProgram(shaderID);
+		//glUseProgram(light);
 
 
 		const glm::vec3 objectColor = {1.0f, 0.5f, 0.31f};
@@ -359,11 +366,10 @@ WinMain(HINSTANCE hInstance,
 
 
         // view/projection transformations
-        glUseProgram(shaderID);
 		const float ZOOM = 45.0f;
         glm::mat4 projection = glm::perspective(glm::radians(ZOOM), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
         //glm::mat4 view = camera.GetViewMatrix();
-		glm::vec3 Position = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 Position = glm::vec3(0.0f, 0.0f, 5.0f);
 		glm::vec3 Front= glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 Up= glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::mat4 view = glm::lookAt(Position, Position + Front, Up);
@@ -372,18 +378,38 @@ WinMain(HINSTANCE hInstance,
 
         // world transformation
         glm::mat4 model = glm::mat4(1.0f);
+		 model = glm::rotate(model, Global_RotationAngleX, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, Global_RotationAngleY, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, Global_RotationAngleZ, glm::vec3(0.0f, 0.0f, 1.0f));
+        
 	   	glUniformMatrix4fv(glGetUniformLocation(lighterID, "model"), 1, GL_FALSE, &model[0][0]);
 
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+		
+		
+		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::rotate(transform, Global_RotationAngleX, glm::vec3(1.0f, 0.0f, 0.0f));
+        transform = glm::rotate(transform, Global_RotationAngleY, glm::vec3(0.0f, 1.0f, 0.0f));
+        transform = glm::rotate(transform, Global_RotationAngleZ, glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        // update shader uniform
+        //int vertexTransformLocation = glGetUniformLocation(lighterID, "transform");
+        //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    //glUniformMatrix4fv(vertexTransformLocation, 1, GL_FALSE, glm::value_ptr(transform));
 
 
+
+
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 12);
+
+/* 
 
 
  // also draw the lamp object
         //lightCubeShader.use();
 		glUseProgram(shaderID);
+
 		glUniformMatrix4fv(glGetUniformLocation(shaderID, "projection"), 1, GL_FALSE, &projection[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderID, "view"), 1, GL_FALSE, &view[0][0]);
 
@@ -393,10 +419,11 @@ WinMain(HINSTANCE hInstance,
 		glUniformMatrix4fv(glGetUniformLocation(shaderID, "model"), 1, GL_FALSE, &model[0][0]);
 
 
+
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
+ */
         
 		SwapBuffers(DC);
         
