@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "E:/ProgramFiles/GLM"
+                "E:/ProgramFiles/GLM",
+                "E:\\ProgramFiles\\GLEW\\glew-2.1.0\\include",
+                "E:\\ProgramFiles\\GLFW\\glfw-3.3.2.bin.WIN64\\include"
             ],
             "defines": [
                 "_DEBUG",
