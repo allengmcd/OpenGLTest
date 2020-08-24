@@ -222,8 +222,8 @@ int main()
 
         glm::mat4 model;
         model = glm::translate(model, glm::vec3(triOffset, 0.0f, 0.0f));
-        model = glm::rotate(model, triOffset, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(triOffset, 1.0f, 1.0f));
+        //model = glm::rotate(model, 45 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(curSize, curSize, curSize));
 
 		GLfloat modelviewmatrix[] = {
 			1.0f , 0.0f , 0.0f , 0.0f,
