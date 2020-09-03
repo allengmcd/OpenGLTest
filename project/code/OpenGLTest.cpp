@@ -253,7 +253,7 @@ WinMain(HINSTANCE hInstance,
 	// Get Buffer Size information
 	int bufferWidth = 1040, bufferHeight = 759;
     
- 	//glEnable(GL_DEPTH_TEST);
+ 	glEnable(GL_DEPTH_TEST);
 
 	// Setup Viewport size
 	glViewport(0, 0, bufferWidth, bufferHeight);
